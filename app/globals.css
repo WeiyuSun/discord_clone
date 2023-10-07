@@ -71,6 +71,13 @@ body,
     --ring: 24 5.7% 82.9%;
   }
 }
+
+.e-center{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
  
 @layer base {
   * {

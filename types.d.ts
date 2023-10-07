@@ -1,0 +1,1 @@
+type ImageFileType = 'serverImage' | 'messageFile';
