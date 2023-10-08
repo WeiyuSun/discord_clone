@@ -2,26 +2,30 @@ import React from 'react';
 import {db} from '@/lib/db';
 import {redirect} from 'next/navigation';
 import {initialProfile} from '@/lib/initial-profile';
-import {InitialModal} from '@/components/modal/initial-modal';
+import {InitialModal} from '@/components/initial-modal';
+import {Profile, Server} from '@/types';
 
-async function SetupPage() {
-	const profile = await initialProfile();
+async function SetupPage(): Promise<React.JSX.Element> {
+	const profile: Profile = await initialProfile();
 
-	const server = await db.server.findFirst({
+
+	const server: Server = await db.server.findFirst({
 		where: {
 			members: {
 				some: {
-					profileId: profile.id
+					profileId: profile?.id
 				}
 			}
 		}
 	});
 
-	if(server) {
-		return redirect(`/server/${server.id}`);
+	if(server){
+		return  redirect(`/servers/${server.id}`);
 	}
 
-	return <InitialModal/>;
+	return(
+		<InitialModal />
+	);
 }
 
 export default SetupPage;
