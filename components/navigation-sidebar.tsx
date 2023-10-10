@@ -1,6 +1,5 @@
 import React from 'react';
-import {Profile} from '@/types';
-import {Server} from '@prisma/client';
+import {Profile, Server} from '@prisma/client';
 import currentProfile from '@/lib/current-profile';
 import {redirect} from 'next/navigation';
 import {db} from '@/lib/db';
@@ -12,7 +11,7 @@ import {ModeToggle} from '@/components/mode-toggle';
 import {UserButton} from '@clerk/nextjs';
 
 async function NavigationSidebar(): Promise<React.JSX.Element>{
-	const profile: Profile = await currentProfile();
+	const profile: Profile | null = await currentProfile();
 
 	if(!profile){
 		return redirect('/');

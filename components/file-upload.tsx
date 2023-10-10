@@ -2,7 +2,6 @@ import React from 'react';
 import {UploadDropzone} from '@/lib/uploadthings';
 import Image from 'next/image';
 import '@uploadthing/react/styles.css';
-import {ImageFileType} from '@/types';
 
 type FileUploadProps = {
 	onChange: (url?: string) => void;
@@ -11,7 +10,7 @@ type FileUploadProps = {
 }
 
 function FileUpload({onChange, value, endpoint}: FileUploadProps) {
-	const fileType = value?.split('.').pop();
+	const fileType: string | undefined = value?.split('.').pop();
 
 	if (value && fileType !== 'pdf') {
 		return (

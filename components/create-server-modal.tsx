@@ -2,7 +2,7 @@
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-
+import React from 'react';
 import {
 	Dialog,
 	DialogContent,
@@ -21,10 +21,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import React, { useEffect, useState } from 'react';
 import FileUpload from '@/components/file-upload';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import {useRouter} from 'next/navigation';
+import {useModal} from '@/hooks/use-modal-store';
 
 const formSchema = z.object({
 	name: z.string().min(1, {
@@ -35,13 +35,11 @@ const formSchema = z.object({
 	})
 });
 
-function InitialModal(): React.JSX.Element | null{
-	const [isMounted, setIsMounted] = useState(false);
+function CreateServerModal(): React.JSX.Element | null{
+	const {isOpen, onClose, type} = useModal();
 	const router = useRouter();
 
-	useEffect(() => {
-		setIsMounted(true);
-	}, []);
+	const isModalOpen = isOpen && type === 'createServer';
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
@@ -55,22 +53,23 @@ function InitialModal(): React.JSX.Element | null{
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
 		try{
-			await axios.post('/api/servers', values);
-
+			const server: AxiosResponse = await axios.post('/api/servers', values);
 			form.reset();
-			router.refresh();
-			window.location.reload();
+			onClose();
+			router.push(`/servers/${server.data.id}`);
+			window.location.href = `/servers/${server.data.id}`;
 		} catch (e) {
 			console.log(e);
 		}
 	};
 
-	if (!isMounted) {
-		return null;
-	}
+	const handleClose = () => {
+		form.reset();
+		onClose();
+	};
 
 	return (
-		<Dialog open>
+		<Dialog open={isModalOpen} onOpenChange={handleClose}>
 			<DialogContent className="bg-white text-black p-0 overflow-hidden">
 				<DialogHeader className="pt-8 px-6">
 					<DialogTitle className="text-2xl text-center font-bold">
@@ -128,4 +127,4 @@ function InitialModal(): React.JSX.Element | null{
 	);
 }
 
-export {InitialModal};
+export {CreateServerModal};
