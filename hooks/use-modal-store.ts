@@ -1,4 +1,5 @@
 import { create} from 'zustand';
+import {ModalType} from '@/types';
 
 type ModalStore = {
 	type: ModalType | null;

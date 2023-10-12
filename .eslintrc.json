@@ -17,7 +17,7 @@
         "@typescript-eslint",
         "react"
     ],
-    "ignorePatterns": ["**/ui/*.tsx"],
+    "ignorePatterns": ["./prisma/**"],
     "rules": {
         "indent": [
             "error",

@@ -1,5 +1,6 @@
 import React from 'react';
 import NavigationSidebar from '@/components/navigation-sidebar';
+
 async function Layout({children} : {children: React.ReactNode}): Promise<React.JSX.Element> {
 	return (
 		<div className={'h-full'}>
