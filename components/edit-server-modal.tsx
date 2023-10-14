@@ -1,8 +1,12 @@
 'use client';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+
 import React from 'react';
+import axios from 'axios';
+import * as z from 'zod';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useForm} from 'react-hook-form';
+import {useEffect} from 'react';
+
 import {
 	Dialog,
 	DialogContent,
@@ -11,18 +15,10 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
+import {Input} from '@/components/ui/input';
+import {Button} from '@/components/ui/button';
 import {FileUpload} from '@/components/file-upload';
-import axios, {AxiosResponse} from 'axios';
 import {useRouter} from 'next/navigation';
 import {useModal} from '@/hooks/use-modal-store';
 
@@ -35,11 +31,12 @@ const formSchema = z.object({
 	})
 });
 
-function CreateServerModal(): React.JSX.Element | null{
-	const {isOpen, onClose, type} = useModal();
+export const EditServerModal = () => {
+	const {isOpen, onClose, type, data} = useModal();
 	const router = useRouter();
 
-	const isModalOpen = isOpen && type === 'createServer';
+	const isModalOpen = isOpen && type === 'editServer';
+	const {server} = data;
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
@@ -49,17 +46,24 @@ function CreateServerModal(): React.JSX.Element | null{
 		}
 	});
 
+	useEffect(() => {
+		if (server) {
+			form.setValue('name', server.name);
+			form.setValue('imageUrl', server.imageUrl);
+		}
+	}, [server, form]);
+
 	const isLoading = form.formState.isSubmitting;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		try{
-			const server: AxiosResponse = await axios.post('/api/servers', values);
+		try {
+			await axios.patch(`/api/servers/${server?.id}`, values);
+
 			form.reset();
+			router.refresh();
 			onClose();
-			router.push(`/servers/${server.data.id}`);
-			window.location.href = `/servers/${server.data.id}`;
-		} catch (e) {
-			console.log(e);
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -76,26 +80,35 @@ function CreateServerModal(): React.JSX.Element | null{
 						Customize your server
 					</DialogTitle>
 					<DialogDescription className="text-center text-zinc-500">
-						Give your server a personality with a name and an image. You can always change it later.
+						Give your server a personality with a name and an image. You can always
+						change it later.
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<div className="space-y-8 px-6">
 							<div className="flex items-center justify-center text-center">
-								<FormField render={({field}) => (
-									<FormItem>
-										<FormControl>
-											<FileUpload endpoint={'serverImage'} value={field.value} onChange={field.onChange}/>
-										</FormControl>
-									</FormItem>
-								)} name={'imageUrl'} control={form.control} />
+								<FormField
+									control={form.control}
+									name="imageUrl"
+									render={({field}) => (
+										<FormItem>
+											<FormControl>
+												<FileUpload
+													endpoint="serverImage"
+													value={field.value}
+													onChange={field.onChange}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
 							</div>
 
 							<FormField
 								control={form.control}
 								name="name"
-								render={({ field }) => (
+								render={({field}) => (
 									<FormItem>
 										<FormLabel
 											className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70"
@@ -110,14 +123,14 @@ function CreateServerModal(): React.JSX.Element | null{
 												{...field}
 											/>
 										</FormControl>
-										<FormMessage />
+										<FormMessage/>
 									</FormItem>
 								)}
 							/>
 						</div>
 						<DialogFooter className="bg-gray-100 px-6 py-4">
 							<Button variant="primary" disabled={isLoading}>
-								Create
+								Save
 							</Button>
 						</DialogFooter>
 					</form>
@@ -125,6 +138,4 @@ function CreateServerModal(): React.JSX.Element | null{
 			</DialogContent>
 		</Dialog>
 	);
-}
-
-export {CreateServerModal};
+};

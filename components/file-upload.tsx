@@ -2,6 +2,7 @@ import React from 'react';
 import {UploadDropzone} from '@/lib/uploadthings';
 import Image from 'next/image';
 import '@uploadthing/react/styles.css';
+import {ImageFileType} from '@/types';
 
 type FileUploadProps = {
 	onChange: (url?: string) => void;
@@ -44,4 +45,4 @@ function FileUpload({onChange, value, endpoint}: FileUploadProps) {
 	);
 }
 
-export default FileUpload;
+export {FileUpload};
