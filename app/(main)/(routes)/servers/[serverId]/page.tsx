@@ -1,8 +1,15 @@
 import React from 'react';
 
-function ServerIdPage(): React.JSX.Element {
+type Props = {
+	params: {
+		serverId: string
+	}
+}
+
+function ServerIdPage({params}: Props): React.JSX.Element {
+
 	return (
-		<div>This is Server ID page</div>
+		<div>{`This is server: ${params.serverId} page`}</div>
 	);
 }
 
