@@ -1,7 +1,10 @@
 'use client';
+import React from 'react';
+import axios from 'axios';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 
 import {
 	Dialog,
@@ -21,10 +24,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import React, { useEffect, useState } from 'react';
-import FileUpload from '@/components/file-upload';
-import axios from 'axios';
-import {useRouter} from 'next/navigation';
+import { FileUpload } from '@/components/file-upload';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
 	name: z.string().min(1, {
@@ -35,8 +36,9 @@ const formSchema = z.object({
 	})
 });
 
-function InitialModal(): React.JSX.Element | null{
+export const InitialModal = () => {
 	const [isMounted, setIsMounted] = useState(false);
+
 	const router = useRouter();
 
 	useEffect(() => {
@@ -54,14 +56,14 @@ function InitialModal(): React.JSX.Element | null{
 	const isLoading = form.formState.isSubmitting;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		try{
+		try {
 			await axios.post('/api/servers', values);
 
 			form.reset();
 			router.refresh();
 			window.location.reload();
-		} catch (e) {
-			console.log(e);
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -84,13 +86,21 @@ function InitialModal(): React.JSX.Element | null{
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<div className="space-y-8 px-6">
 							<div className="flex items-center justify-center text-center">
-								<FormField render={({field}) => (
-									<FormItem>
-										<FormControl>
-											<FileUpload endpoint={'serverImage'} value={field.value} onChange={field.onChange}/>
-										</FormControl>
-									</FormItem>
-								)} name={'imageUrl'} control={form.control} />
+								<FormField
+									control={form.control}
+									name="imageUrl"
+									render={({ field }) => (
+										<FormItem>
+											<FormControl>
+												<FileUpload
+													endpoint="serverImage"
+													value={field.value}
+													onChange={field.onChange}
+												/>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
 							</div>
 
 							<FormField
@@ -126,6 +136,4 @@ function InitialModal(): React.JSX.Element | null{
 			</DialogContent>
 		</Dialog>
 	);
-}
-
-export {InitialModal};
+};
