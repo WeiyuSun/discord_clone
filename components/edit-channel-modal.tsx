@@ -3,14 +3,26 @@ import * as z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import React, {useEffect} from 'react';
-import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog';
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle
+} from '@/components/ui/dialog';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
-import axios, {AxiosResponse} from 'axios';
-import {useParams, useRouter} from 'next/navigation';
+import axios from 'axios';
+import {useRouter} from 'next/navigation';
 import {useModal} from '@/hooks/use-modal-store';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select';
 import qs from 'query-string';
 import {AppRouterInstance} from 'next/dist/shared/lib/app-router-context';
 import {ChannelType} from '@prisma/client';
@@ -28,44 +40,42 @@ const formSchema = z.object({
 	type: z.nativeEnum(ChannelType)
 });
 
-function CreateChannelModal(): React.JSX.Element | null {
-	const {isOpen, onClose, type, data}  = useModal();
+function EditChannelModal(): React.JSX.Element | null {
+	const {isOpen, onClose, type, data} = useModal();
+	const {channel, server} = data;
 	const router: AppRouterInstance = useRouter();
-	const params = useParams();
 
-	const isModalOpen: boolean = isOpen && type === 'createChannel';
-	const {channelType} = data;
+	const isModalOpen: boolean = isOpen && type === 'editChannel';
+
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: '',
-			type: channelType || ChannelType.TEXT
+			type: channel?.type ||  ChannelType.TEXT
 		}
 	});
 
 	useEffect(() => {
-		if(channelType){
-			form.setValue('type', channelType);
-		} else {
-			form.setValue('type', ChannelType.TEXT);
+		if(channel) {
+			form.setValue('name', channel.name);
+			form.setValue('type', channel.type);
 		}
-	}, [channelType, form]);
+	}, [form, channel]);
 
 	const isLoading: boolean = form.formState.isSubmitting;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
 		try {
 			const url: string = qs.stringifyUrl({
-				url: '/api/channels',
+				url: `/api/channels/${channel?.id}`,
 				query: {
-					serverId: params?.serverId
+					serverId: server?.id
 				}
 			});
 
-			const channel: AxiosResponse = await axios.post(url, values);
+			await axios.patch(url, values);
 
-			console.log(channel);
 			form.reset();
 			router.refresh();
 			onClose();
@@ -84,7 +94,7 @@ function CreateChannelModal(): React.JSX.Element | null {
 			<DialogContent className="bg-white text-black p-0 overflow-hidden">
 				<DialogHeader className="pt-8 px-6">
 					<DialogTitle className="text-2xl text-center font-bold">
-						Create Channel
+						Edit Channel
 					</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
@@ -116,7 +126,7 @@ function CreateChannelModal(): React.JSX.Element | null {
 							<FormField
 								control={form.control}
 								name="type"
-								render={({ field }) => (
+								render={({field}) => (
 									<FormItem>
 										<FormLabel>Channel Type</FormLabel>
 										<Select
@@ -128,7 +138,8 @@ function CreateChannelModal(): React.JSX.Element | null {
 												<SelectTrigger
 													className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none"
 												>
-													<SelectValue placeholder="Select a channel type" />
+													<SelectValue
+														placeholder="Select a channel type"/>
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
@@ -143,14 +154,14 @@ function CreateChannelModal(): React.JSX.Element | null {
 												))}
 											</SelectContent>
 										</Select>
-										<FormMessage />
+										<FormMessage/>
 									</FormItem>
 								)}
 							/>
 						</div>
 						<DialogFooter className="bg-gray-100 px-6 py-4">
 							<Button variant="primary" disabled={isLoading}>
-								Create
+								Save
 							</Button>
 						</DialogFooter>
 					</form>
@@ -160,4 +171,4 @@ function CreateChannelModal(): React.JSX.Element | null {
 	);
 }
 
-export {CreateChannelModal};
+export {EditChannelModal};

@@ -9,6 +9,8 @@ import {MembersModal} from '@/components/members-modal';
 import {CreateChannelModal} from '@/components/create-channel-modal';
 import {LeaveServerModal} from '@/components/leave-server-modal';
 import {DeleteServerModal} from '@/components/delete-server-modal';
+import {DeleteChannelModal} from '@/components/delete-channel-modal';
+import {EditChannelModal} from '@/components/edit-channel-modal';
 
 function ModalProvider(): React.JSX.Element | null {
 	const [isMounted, setIsMounted] = useState(false);
@@ -30,6 +32,8 @@ function ModalProvider(): React.JSX.Element | null {
 			<CreateChannelModal />
 			<LeaveServerModal />
 			<DeleteServerModal />
+			<DeleteChannelModal />
+			<EditChannelModal />
 		</>
 	);
 }
