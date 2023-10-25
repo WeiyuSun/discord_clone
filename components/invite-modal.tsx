@@ -10,7 +10,7 @@ import {useOrigin} from '@/hooks/use-origin';
 import axios, {AxiosResponse} from 'axios';
 
 
-function InviteModal(): React.JSX.Element | null {
+export function InviteModal(): React.JSX.Element | null {
 	const {onOpen, isOpen, onClose, type, data} = useModal();
 	const origin: string = useOrigin();
 
@@ -91,5 +91,3 @@ function InviteModal(): React.JSX.Element | null {
 		</Dialog>
 	);
 }
-
-export {InviteModal};

@@ -35,7 +35,7 @@ const formSchema = z.object({
 	})
 });
 
-function CreateServerModal(): React.JSX.Element | null{
+export function CreateServerModal(): React.JSX.Element | null{
 	const {isOpen, onClose, type} = useModal();
 	const router = useRouter();
 
@@ -126,5 +126,3 @@ function CreateServerModal(): React.JSX.Element | null{
 		</Dialog>
 	);
 }
-
-export {CreateServerModal};

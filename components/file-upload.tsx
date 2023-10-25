@@ -10,7 +10,7 @@ type FileUploadProps = {
 	endpoint: ImageFileType
 }
 
-function FileUpload({onChange, value, endpoint}: FileUploadProps) {
+export function FileUpload({onChange, value, endpoint}: FileUploadProps) {
 	const fileType: string | undefined = value?.split('.').pop();
 
 	if (value && fileType !== 'pdf') {
@@ -44,5 +44,3 @@ function FileUpload({onChange, value, endpoint}: FileUploadProps) {
 		}/>
 	);
 }
-
-export {FileUpload};

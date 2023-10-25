@@ -12,7 +12,7 @@ import {DeleteServerModal} from '@/components/delete-server-modal';
 import {DeleteChannelModal} from '@/components/delete-channel-modal';
 import {EditChannelModal} from '@/components/edit-channel-modal';
 
-function ModalProvider(): React.JSX.Element | null {
+export function ModalProvider(): React.JSX.Element | null {
 	const [isMounted, setIsMounted] = useState(false);
 
 	useEffect(() => {
@@ -37,5 +37,3 @@ function ModalProvider(): React.JSX.Element | null {
 		</>
 	);
 }
-
-export {ModalProvider};

@@ -5,7 +5,7 @@ import {Plus} from 'lucide-react';
 import {useModal} from '@/hooks/use-modal-store';
 // import {ActionTooltip} from '@/components/action-tooltip';
 
-function NavigationAction(): React.JSX.Element {
+export function NavigationAction(): React.JSX.Element {
 	const {onOpen} = useModal();
 	return (
 		<div>
@@ -23,5 +23,3 @@ function NavigationAction(): React.JSX.Element {
 		</div>
 	);
 }
-
-export default NavigationAction;

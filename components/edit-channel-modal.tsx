@@ -40,7 +40,7 @@ const formSchema = z.object({
 	type: z.nativeEnum(ChannelType)
 });
 
-function EditChannelModal(): React.JSX.Element | null {
+export function EditChannelModal(): React.JSX.Element | null {
 	const {isOpen, onClose, type, data} = useModal();
 	const {channel, server} = data;
 	const router: AppRouterInstance = useRouter();
@@ -170,5 +170,3 @@ function EditChannelModal(): React.JSX.Element | null {
 		</Dialog>
 	);
 }
-
-export {EditChannelModal};

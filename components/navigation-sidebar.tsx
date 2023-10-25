@@ -4,13 +4,13 @@ import currentProfile from '@/lib/current-profile';
 import {redirect} from 'next/navigation';
 import {db} from '@/lib/db';
 import {Separator} from '@/components/ui/separator';
-import NavigationAction from '@/components/navigation-action';
+import {NavigationAction} from '@/components/navigation-action';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {NavigationItem} from '@/components/navigation-item';
 import {ModeToggle} from '@/components/mode-toggle';
 import {UserButton} from '@clerk/nextjs';
 
-async function NavigationSidebar(): Promise<React.JSX.Element>{
+export async function NavigationSidebar(): Promise<React.JSX.Element>{
 	const profile: Profile | null = await currentProfile();
 
 	if(!profile){
@@ -54,5 +54,3 @@ async function NavigationSidebar(): Promise<React.JSX.Element>{
 		</div>
 	);
 }
-
-export default NavigationSidebar;

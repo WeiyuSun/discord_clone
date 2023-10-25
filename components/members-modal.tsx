@@ -43,7 +43,7 @@ const roleIconMap = {
 	'ADMIN': <ShieldAlert className={'h-4 w-4 text-rose-500'}/>
 };
 
-function MembersModal(): React.JSX.Element | null {
+export function MembersModal(): React.JSX.Element | null {
 	const router = useRouter();
 	const {onOpen, isOpen, onClose, type, data} = useModal();
 	const [loadingId, setLoadingId] = useState('');
@@ -177,5 +177,3 @@ function MembersModal(): React.JSX.Element | null {
 		</Dialog>
 	);
 }
-
-export {MembersModal};

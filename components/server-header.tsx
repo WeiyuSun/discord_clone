@@ -15,7 +15,7 @@ type props = {
 	role?: MemberRole,
 }
 
-function ServerHeader({server, role}: props): React.JSX.Element {
+export function ServerHeader({server, role}: props): React.JSX.Element {
 	const {onOpen} = useModal();
 	const isAdmin: boolean = role === MemberRole.ADMIN;
 	const isModerator: boolean = isAdmin || (role === MemberRole.MODERATOR);
@@ -98,5 +98,3 @@ function ServerHeader({server, role}: props): React.JSX.Element {
 		</DropdownMenu>
 	);
 }
-
-export {ServerHeader};

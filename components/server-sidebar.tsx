@@ -29,7 +29,7 @@ const roleIconMap = {
 	[MemberRole.ADMIN]: <ShieldAlert className={'h-4 w-4 mr-2 text-rose-500'}/>
 };
 
-async function ServerSidebar({serverId}: props): Promise<React.JSX.Element> {
+export async function ServerSidebar({serverId}: props): Promise<React.JSX.Element> {
 	const profile: Profile | null = await currentProfile();
 
 	if (!profile) {
@@ -181,5 +181,3 @@ async function ServerSidebar({serverId}: props): Promise<React.JSX.Element> {
 		</div>
 	);
 }
-
-export {ServerSidebar};

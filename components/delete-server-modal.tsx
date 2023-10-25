@@ -13,7 +13,7 @@ import axios from 'axios';
 import {useRouter} from 'next/navigation';
 
 
-function DeleteServerModal(): React.JSX.Element | null {
+export function DeleteServerModal(): React.JSX.Element | null {
 	const router = useRouter();
 	const {isOpen, onClose, type, data} = useModal();
 
@@ -72,5 +72,3 @@ function DeleteServerModal(): React.JSX.Element | null {
 		</Dialog>
 	);
 }
-
-export {DeleteServerModal};
