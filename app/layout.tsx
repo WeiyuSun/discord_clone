@@ -6,6 +6,7 @@ import {ThemeProvider} from '@/components/theme-provider';
 import {cn} from '@/lib/utils';
 import React from 'react';
 import {ModalProvider} from '@/components/modal-provider';
+import {SocketProvider} from '@/components/socket-provider';
 
 const font = Open_Sans({subsets: ['latin']});
 
@@ -24,8 +25,10 @@ export default function RootLayout({
 			<html lang="en" suppressHydrationWarning>
 				<body className={cn(font.className, 'light:bg-white dark:bg-[#313338]')}>
 					<ThemeProvider attribute={'class'} defaultTheme={'dark'} enableSystem={false} storageKey={'discord-theme'}>
-						<ModalProvider />
-						{children}
+						<SocketProvider>
+							<ModalProvider />
+							{children}
+						</SocketProvider>
 					</ThemeProvider>
 				</body>
 			</html>

@@ -1,4 +1,4 @@
-import {db} from './db';
+import {db} from '@/lib/db';
 
 
 export const getOrCreateConversation = async (memberOneId: string, memberTwoId: string) => {
