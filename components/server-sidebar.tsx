@@ -66,7 +66,7 @@ export async function ServerSidebar({serverId}: props): Promise<React.JSX.Elemen
 	const textChannels = server?.channels.filter((channel: Channel) => (channel.type === ChannelType.TEXT));
 	const audioChannels = server?.channels.filter((channel: Channel) => (channel.type === ChannelType.AUDIO));
 	const videoChannels = server?.channels.filter((channel: Channel) => (channel.type === ChannelType.VIDEO));
-	const members = server?.members.filter((member) => (member.profileId === profile.id));
+	const members = server?.members.filter((member) => (member.profileId !== profile.id));
 	const role: MemberRole | undefined = server.members.find(member => member.profileId === profile.id)?.role;
 
 	return (

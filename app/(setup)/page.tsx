@@ -6,7 +6,6 @@ import {InitialModal} from '@/components/initial-modal';
 import {Profile, Server} from '@prisma/client';
 
 async function SetupPage(): Promise<React.JSX.Element> {
-	console.log('welcome to home page');
 	const profile: Profile = await initialProfile();
 
 
