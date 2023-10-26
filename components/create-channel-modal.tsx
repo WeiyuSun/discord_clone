@@ -1,19 +1,39 @@
 'use client';
-import * as z from 'zod';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {useForm} from 'react-hook-form';
-import React, {useEffect} from 'react';
-import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog';
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
-import {Input} from '@/components/ui/input';
-import {Button} from '@/components/ui/button';
-import axios, {AxiosResponse} from 'axios';
-import {useParams, useRouter} from 'next/navigation';
-import {useModal} from '@/hooks/use-modal-store';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
+import React from 'react';
 import qs from 'query-string';
-import {AppRouterInstance} from 'next/dist/shared/lib/app-router-context';
-import {ChannelType} from '@prisma/client';
+import axios from 'axios';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { ChannelType } from '@prisma/client';
+
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useParams, useRouter } from 'next/navigation';
+import { useModal } from '@/hooks/use-modal-store';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select';
+import { useEffect } from 'react';
 
 const formSchema = z.object({
 	name: z.string().min(1, {
@@ -24,53 +44,50 @@ const formSchema = z.object({
 			message: 'Channel name cannot be \'general\''
 		}
 	),
-
 	type: z.nativeEnum(ChannelType)
 });
 
-export function CreateChannelModal(): React.JSX.Element | null {
-	const {isOpen, onClose, type, data}  = useModal();
-	const router: AppRouterInstance = useRouter();
+export function CreateChannelModal() {
+	const { isOpen, onClose, type, data } = useModal();
+	const router = useRouter();
 	const params = useParams();
 
-	const isModalOpen: boolean = isOpen && type === 'createChannel';
-	const {channelType} = data;
+	const isModalOpen = isOpen && type === 'createChannel';
+	const { channelType } = data;
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: '',
-			type: channelType || ChannelType.TEXT
+			type: channelType || ChannelType.TEXT,
 		}
 	});
 
 	useEffect(() => {
-		if(channelType){
+		if (channelType) {
 			form.setValue('type', channelType);
 		} else {
 			form.setValue('type', ChannelType.TEXT);
 		}
 	}, [channelType, form]);
 
-	const isLoading: boolean = form.formState.isSubmitting;
+	const isLoading = form.formState.isSubmitting;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
 		try {
-			const url: string = qs.stringifyUrl({
+			const url = qs.stringifyUrl({
 				url: '/api/channels',
 				query: {
 					serverId: params?.serverId
 				}
 			});
+			await axios.post(url, values);
 
-			const channel: AxiosResponse = await axios.post(url, values);
-
-			console.log(channel);
 			form.reset();
 			router.refresh();
 			onClose();
-		} catch (e) {
-			console.log(e);
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -93,7 +110,7 @@ export function CreateChannelModal(): React.JSX.Element | null {
 							<FormField
 								control={form.control}
 								name="name"
-								render={({field}) => (
+								render={({ field }) => (
 									<FormItem>
 										<FormLabel
 											className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70"
@@ -108,11 +125,10 @@ export function CreateChannelModal(): React.JSX.Element | null {
 												{...field}
 											/>
 										</FormControl>
-										<FormMessage/>
+										<FormMessage />
 									</FormItem>
 								)}
 							/>
-
 							<FormField
 								control={form.control}
 								name="type"
