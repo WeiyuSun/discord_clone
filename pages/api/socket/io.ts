@@ -11,6 +11,8 @@ export const config = {
 };
 
 function ioHandler(req: NextApiRequest, res: NextApiResponseServerIo){
+
+	console.log('running...');
 	if (!res.socket.server.io) {
 		const path = '/api/socket/io';
 		const httpServer: NetServer = res.socket.server as never;

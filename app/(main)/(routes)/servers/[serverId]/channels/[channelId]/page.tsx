@@ -5,6 +5,7 @@ import {db} from '@/lib/db';
 import {Channel, Member} from '@prisma/client';
 import {redirect} from 'next/navigation';
 import {ChatHeader} from '@/components/chat-header';
+import {ChatInput} from '@/components/chat-input';
 type Props = {
 	params: {
 		serverId: string;
@@ -36,9 +37,16 @@ async function Page({params}: Props): Promise<React.JSX.Element> {
 		redirect('/');
 	}
 
+	const queryProps = {
+		channelId: channel.id,
+		serverId: channel.serverId
+	};
+
 	return (
 		<div className={'bg-white dark:bg-[#313338] flex flex-col h-full'}>
 			<ChatHeader name={channel.name} serverId={channel.serverId} type={'channel'}/>
+			<div className={'flex-1'}>Future Message</div>
+			<ChatInput apiUrl={'/api/socket/messages'} query={queryProps} name={channel.name} type={'channel'} />
 		</div>
 	);
 }
