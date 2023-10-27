@@ -11,6 +11,7 @@ import {LeaveServerModal} from '@/components/leave-server-modal';
 import {DeleteServerModal} from '@/components/delete-server-modal';
 import {DeleteChannelModal} from '@/components/delete-channel-modal';
 import {EditChannelModal} from '@/components/edit-channel-modal';
+import {MessageFileModal} from '@/components/message-file-modal';
 
 export function ModalProvider(): React.JSX.Element | null {
 	const [isMounted, setIsMounted] = useState(false);
@@ -34,6 +35,7 @@ export function ModalProvider(): React.JSX.Element | null {
 			<DeleteServerModal />
 			<DeleteChannelModal />
 			<EditChannelModal />
+			<MessageFileModal />
 		</>
 	);
 }
