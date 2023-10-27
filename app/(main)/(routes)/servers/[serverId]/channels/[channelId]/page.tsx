@@ -6,6 +6,8 @@ import {Channel, Member} from '@prisma/client';
 import {redirect} from 'next/navigation';
 import {ChatHeader} from '@/components/chat-header';
 import {ChatInput} from '@/components/chat-input';
+import {ChatMessages} from '@/components/chat-messages';
+
 type Props = {
 	params: {
 		serverId: string;
@@ -16,8 +18,8 @@ type Props = {
 async function Page({params}: Props): Promise<React.JSX.Element> {
 	const profile = await currentProfile();
 
-	if(!profile){
-		return  redirectToSignIn();
+	if (!profile) {
+		return redirectToSignIn();
 	}
 
 	const channel: Channel | null = await db.channel.findUnique({
@@ -33,7 +35,7 @@ async function Page({params}: Props): Promise<React.JSX.Element> {
 		}
 	});
 
-	if(!channel || !member){
+	if (!channel || !member) {
 		redirect('/');
 	}
 
@@ -45,8 +47,21 @@ async function Page({params}: Props): Promise<React.JSX.Element> {
 	return (
 		<div className={'bg-white dark:bg-[#313338] flex flex-col h-full'}>
 			<ChatHeader name={channel.name} serverId={channel.serverId} type={'channel'}/>
-			<div className={'flex-1'}>Future Message</div>
-			<ChatInput apiUrl={'/api/socket/messages'} query={queryProps} name={channel.name} type={'channel'} />
+			<ChatMessages
+				member={member}
+				name={channel.name}
+				chatId={channel.id}
+				type={'channel'}
+				apiUrl={'/api/messages'}
+				socketUrl={'/api/socket/messages'}
+				socketQuery={{
+					channelId: channel.id,
+					severId: channel.serverId
+				}}
+				paramKey={'channelId'}
+				paramValue={channel.id}/>
+
+			<ChatInput apiUrl={'/api/socket/messages'} query={queryProps} name={channel.name} type={'channel'}/>
 		</div>
 	);
 }
