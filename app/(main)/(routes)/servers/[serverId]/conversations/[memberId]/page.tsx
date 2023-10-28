@@ -5,15 +5,22 @@ import {db} from '@/lib/db';
 import {ChatHeader} from '@/components/chat-header';
 import {redirect} from 'next/navigation';
 import {getOrCreateConversation} from '@/lib/conversation';
+import {ChatMessages} from '@/components/chat-messages';
+import {ChatInput} from '@/components/chat-input';
+import {MediaRoom} from '@/components/media-room';
 
 type Props = {
 	params: {
 		memberId: string;
 		serverId: string;
+	},
+
+	searchParams: {
+		video?: boolean
 	}
 }
 
-async function Page({params}: Props) {
+async function Page({params, searchParams}: Props) {
 	const profile = await currentProfile();
 
 	if (!profile) {
@@ -40,7 +47,7 @@ async function Page({params}: Props) {
 		return redirect(`/servers/${params.serverId}`);
 	}
 
-	const { memberOne, memberTwo } = conversation;
+	const {memberOne, memberTwo} = conversation;
 
 	const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne;
 
@@ -52,6 +59,31 @@ async function Page({params}: Props) {
 				serverId={params.serverId}
 				type="conversation"
 			/>
+
+			{searchParams.video && (
+				<MediaRoom chatId={conversation.id} video={true} audio={true} />
+			)}
+
+			{!searchParams.video && (
+				<>
+					<ChatMessages
+						name={otherMember.profile.name}
+						member={currentMember}
+						chatId={conversation.id}
+						apiUrl={'/api/direct-messages'}
+						socketUrl={'/api/socket/direct-messages'}
+						socketQuery={{
+							conversationId: conversation.id
+						}}
+						paramKey={'conversationId'}
+						paramValue={conversation.id}
+						type={'conversation'}/>
+
+					<ChatInput apiUrl={'/api/socket/direct-messages'} query={{
+						conversationId: conversation.id
+					}} name={otherMember.profile.name} type={'conversation'}/>
+				</>
+			)}
 		</div>
 	);
 }
