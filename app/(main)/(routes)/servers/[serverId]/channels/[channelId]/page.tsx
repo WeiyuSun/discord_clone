@@ -56,7 +56,7 @@ async function Page({params}: Props): Promise<React.JSX.Element> {
 				socketUrl={'/api/socket/messages'}
 				socketQuery={{
 					channelId: channel.id,
-					severId: channel.serverId
+					serverId: channel.serverId
 				}}
 				paramKey={'channelId'}
 				paramValue={channel.id}/>
