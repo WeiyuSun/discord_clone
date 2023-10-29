@@ -16,7 +16,7 @@ async function ServerIdLayout({children, params}: {
 		return redirectToSignIn();
 	}
 
-	const server: Server = await db.server.findUnique({
+	const server: Server | null = await db.server.findUnique({
 		where: {
 			id: params.serverId,
 			members: {

@@ -23,7 +23,6 @@ export const MediaRoom = ({
 
 	useEffect(() => {
 		if (!user?.username) return;
-		console.log('validation passed');
 		const name = user.username;
 
 		async function getToken () {

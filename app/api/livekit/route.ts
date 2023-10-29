@@ -3,10 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
 
-	console.log('hajimi');
 	const room = req.nextUrl.searchParams.get('room');
 	const username = req.nextUrl.searchParams.get('username');
-	console.log(room, username);
 
 	if (!room) {
 		return NextResponse.json({ error: 'Missing "room" query parameter' }, { status: 400 });
